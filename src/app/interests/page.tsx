@@ -51,7 +51,7 @@ export default function InterestsPage() {
         JSON.stringify({
           interests: data.user.interests,
           userId: data.user._id,
-          username: data.user.username,
+          username: data.user.name,
         })
       );
       router.push("/");

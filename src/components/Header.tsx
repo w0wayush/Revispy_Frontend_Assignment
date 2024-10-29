@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 import { Search, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TopHeader from "./TopHeader";
 
 export default function Header() {
-  const pathname = usePathname();
-  const isAuthPage = ["/signin", "/signup", "/verify", "/interests"].includes(
-    pathname
-  );
+  // const pathname = usePathname();
+  // const isAuthPage = ["/signin", "/signup", "/verify", "/interests"].includes(
+  // pathname
+  // );
 
   return (
     <header className="bg-white border-b">

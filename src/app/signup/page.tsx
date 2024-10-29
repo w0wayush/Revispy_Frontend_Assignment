@@ -101,7 +101,7 @@ export default function SignUp() {
         router.push("/interests");
       }
     }
-  }, []);
+  }, [router]);
 
   return (
     <div className="container max-w-lg mx-auto p-6">

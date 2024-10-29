@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { OTPInput, OTPInputContext } from "input-otp";
+import { OTPInput } from "input-otp";
 import { cn } from "@/lib/utils";
 import { DashIcon } from "@radix-ui/react-icons";
 
@@ -30,7 +30,6 @@ const InputOTPGroup = React.forwardRef<
 InputOTPGroup.displayName = "InputOTPGroup";
 
 type InputOTPSlotProps = {
-  index: number;
   char: string | null;
   hasFakeCaret?: boolean;
   isActive: boolean;
@@ -39,7 +38,7 @@ type InputOTPSlotProps = {
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   InputOTPSlotProps
->(({ index, char, hasFakeCaret, isActive, className, ...props }, ref) => {
+>(({ char, hasFakeCaret, isActive, className, ...props }, ref) => {
   return (
     <div
       ref={ref}

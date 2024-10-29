@@ -118,7 +118,7 @@ const VerifyPage = () => {
               <InputOTPGroup className="">
                 {slots.map((slot, index) => (
                   <React.Fragment key={index}>
-                    <InputOTPSlot {...slot} index={index} />
+                    <InputOTPSlot {...slot} />
                     {index < slots.length - 1 && <div className="sm:w-3" />}
                   </React.Fragment>
                 ))}

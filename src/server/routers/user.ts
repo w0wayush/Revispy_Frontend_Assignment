@@ -219,6 +219,7 @@ export const userRouter = router({
       return {
         success: true,
         message: "OTP verified successfully",
+        updatedUser,
       };
     }),
 

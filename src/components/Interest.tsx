@@ -12,6 +12,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface ProductCardProps {
   title: string;
@@ -28,6 +29,9 @@ interface ProductCardProps {
 interface ToggleStates {
   [key: string]: boolean;
 }
+
+const IMAGE_WIDTH = 500;
+const IMAGE_HEIGHT = 300;
 
 const generateFakeData = (interest: string): ProductCardProps[] => {
   return Array.from({ length: 12 }, () => ({
@@ -131,9 +135,11 @@ export default function Interests() {
                   {/* Image Section */}
                   <div className="relative w-full md:w-2/5 lg:w-1/3">
                     <div className="relative h-64 md:h-full">
-                      <img
+                      <Image
                         src={item.image}
                         alt={item.title}
+                        width={IMAGE_WIDTH}
+                        height={IMAGE_HEIGHT}
                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -161,9 +167,11 @@ export default function Interests() {
                   {/* Content Section */}
                   <div className="flex-1 p-6 md:p-8 flex flex-col">
                     <div className="flex items-center gap-4 mb-4">
-                      <img
+                      <Image
                         src={item.userAvatar}
                         alt="Seller avatar"
+                        width={48}
+                        height={48}
                         className="h-12 w-12 rounded-full ring-2 ring-purple-100"
                       />
                       <div>

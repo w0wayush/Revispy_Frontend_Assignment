@@ -15,6 +15,7 @@ export default function SignIn() {
     email: "",
     password: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false); // Add isSubmitting state
 
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
@@ -35,6 +36,7 @@ export default function SignIn() {
 
   const login = trpc.user.login.useMutation({
     onSuccess: (data) => {
+      setIsSubmitting(false); // Reset isSubmitting on success
       if (data && data?.userData?.userId) {
         localStorage.setItem("userInfo", JSON.stringify(data.userData));
         toast({
@@ -50,6 +52,7 @@ export default function SignIn() {
       }
     },
     onError: (error) => {
+      setIsSubmitting(false); // Reset isSubmitting on error
       toast({
         variant: "destructive",
         title: "Error",
@@ -69,6 +72,7 @@ export default function SignIn() {
       return;
     }
 
+    setIsSubmitting(true); // Set isSubmitting to true before mutation
     login.mutate(formData);
   };
 
@@ -120,8 +124,13 @@ export default function SignIn() {
             />
           </div>
 
-          <Button type="submit" variant="default" className="w-full uppercase">
-            Login
+          <Button
+            type="submit"
+            variant="default"
+            className="w-full uppercase"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Logging in..." : "Login"}
           </Button>
         </form>
 

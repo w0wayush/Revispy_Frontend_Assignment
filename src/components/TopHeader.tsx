@@ -1,10 +1,10 @@
 import { ExitIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const TopHeader = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const pathname = usePathname();
   const isAuthPage = ["/signin", "/signup", "/verify", "/interests"].includes(
     pathname
