@@ -52,15 +52,14 @@ export default function Header() {
           </>
           {/* )} */}
         </div>
-
-        {/* {!isAuthPage && ( */}
-        <div className="py-2 bg-gray-50 text-center text-sm font-medium">
-          <button className="mx-4">&lt;</button>
-          Get 10% off on business sign up
-          <button className="mx-4">&gt;</button>
-        </div>
-        {/* )} */}
       </div>
+      {/* {!isAuthPage && ( */}
+      <div className="py-2 bg-gray-50 text-center text-sm font-medium w-full">
+        <button className="mx-4">&lt;</button>
+        Get 10% off on business sign up
+        <button className="mx-4">&gt;</button>
+      </div>
+      {/* )} */}
     </header>
   );
 }
