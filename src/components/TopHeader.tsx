@@ -18,7 +18,7 @@ const TopHeader = () => {
     if (userInfo) {
       try {
         const userData = JSON.parse(userInfo);
-        setUserName(userData.name);
+        setUserName(userData.username || userData.name);
       } catch (error) {
         console.error("Error parsing user info from localStorage:", error);
       }
