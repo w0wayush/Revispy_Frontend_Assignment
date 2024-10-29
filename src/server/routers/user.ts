@@ -122,4 +122,144 @@ export const userRouter = router({
         },
       };
     }),
+
+  updateInterests: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        interests: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ input }) => {
+      await connectDB();
+      const user = await User.findByIdAndUpdate(
+        input.userId,
+        { interests: input.interests },
+        { new: true }
+      );
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      return { success: true, message: "Interests updated successfully", user };
+    }),
+
+  verifyOTP: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+        otp: z.string().length(8),
+      })
+    )
+    .mutation(async ({ input }) => {
+      await connectDB();
+
+      const user = await User.findOne({ email: input.email });
+      // console.log("Verifying OTP for user:", {
+      //   email: input.email,
+      //   providedOTP: input.otp,
+      //   storedOTP: user?.otp,
+      //   otpExpiry: user?.otpExpiry,
+      //   attempts: user?.otpAttempts,
+      // });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      if (!user.otp) {
+        console.error("No OTP found for user!");
+        throw new Error("No OTP found. Please request a new one.");
+      }
+
+      // Check if OTP is expired
+      if (user.otpExpiry < new Date()) {
+        console.log("OTP expired:", {
+          expiry: user.otpExpiry,
+          now: new Date(),
+        });
+        throw new Error("OTP has expired");
+      }
+
+      // Check attempts
+      if (user.otpAttempts >= 3) {
+        throw new Error("Too many attempts. Please request a new OTP");
+      }
+
+      // Verify OTP
+      const otpMatch = user.otp == input.otp;
+      // console.log("OTP comparison:", {
+      //   stored: user.otp,
+      //   provided: input.otp,
+      //   matches: otpMatch,
+      // });
+
+      if (!otpMatch) {
+        await User.findByIdAndUpdate(user._id, {
+          $inc: { otpAttempts: 1 },
+        });
+        throw new Error("Invalid OTP");
+      }
+
+      // Clear OTP after successful verification
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        {
+          otp: null,
+          otpExpiry: null,
+          otpAttempts: 0,
+          verified: true,
+        },
+        { new: true }
+      );
+
+      // console.log("User verified successfully:", updatedUser);
+
+      return {
+        success: true,
+        message: "OTP verified successfully",
+      };
+    }),
+
+  generateOTP: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      await connectDB();
+
+      // Generate 8-digit OTP
+      const otp = Math.floor(10000000 + Math.random() * 90000000).toString();
+      const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes expiry
+
+      const user = await User.findOne({ email: input.email });
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Update user with new OTP
+      await User.findByIdAndUpdate(user._id, {
+        otp,
+        otpExpiry,
+        otpAttempts: 0,
+      });
+
+      // Send OTP email
+      await sendOTPEmail(input.email, otp, user.name);
+
+      return {
+        success: true,
+        message: "OTP sent successfully",
+      };
+    }),
+
+  test: publicProcedure.query(() => {
+    return {
+      message: "tRPC is working correctly!",
+      timestamp: new Date().toISOString(),
+    };
+  }),
 });
