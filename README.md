@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Categorization Website
+
+A simple website that allows users to sign up, log in, and select categories they're interested in.
+
+## Technologies Used
+
+- **Framework:** Next.js 14
+- **Language:** TypeScript
+- **UI Library and Services:** ShadCN UI, React Icons, Nodemailer, Tailwind CSS
+- **Backend:** tRPC
+- **Database:** MongoDB
+
+## Features
+
+### Sign-up and Login Flows:
+
+- **Two screens** for new user registration.
+- **One screen** for existing user login.
+- Secure authentication and authorization using tRPC.
+
+### Protected Page:
+
+- Accessible only to logged-in users.
+- Displays a **list of categories** fetched from the MongoDB database.
+- Allows users to **mark categories** they're interested in.
+- Implements **pagination** (6 categories per page).
+- **Stores user selections** in the MongoDB database.
+
+### Database:
+
+- Uses the **faker.js** library to generate user's interests.
+
+### User Experience:
+
+- **Selected categories** persist across user sessions.
+- **Static header** common for all pages.
 
 ## Getting Started
 
-First, run the development server:
+### Install Dependencies:
+
+```bash
+npm install
+```
+
+### Set up the Database:
+
+1. Install and run **MongoDB** on your local machine.
+2. Seed the MongoDB database with **100 category entries** using the **faker.js** library.
+
+### Start the Development Server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Access the Application:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open your web browser and navigate to [Live Link](revispy-ayushw0w.vercel.app).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Future Improvements
 
-## Learn More
+- **Enhance the UI** design and make it more responsive.
+- Implement **user profile management**.
+- Add **sorting and filtering options** for categories.
+- Improve the overall **user experience and accessibility**.
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If you'd like to contribute to this project, please feel free to submit a pull request or open an issue. We welcome any feedback or suggestions to help improve the application.
