@@ -10,6 +10,11 @@ A simple website that allows users to sign up, log in, and select categories the
 - **Backend:** tRPC
 - **Database:** MongoDB
 
+## Reference Video
+
+https://github.com/user-attachments/assets/a79f9b12-e207-46e5-8709-2f043d9b18cc
+
+
 ## Features
 
 ### Sign-up and Login Flows:
