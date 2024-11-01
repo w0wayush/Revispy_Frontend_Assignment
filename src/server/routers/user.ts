@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure } from "../trpc";
-import { User } from "@/models/User";
+import { User } from "@/server/models/User";
 import { connectDB } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { sendOTPEmail } from "@/utils/emailService";
