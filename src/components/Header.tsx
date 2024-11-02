@@ -6,13 +6,12 @@ import { Search, ShoppingCart, Menu } from "lucide-react"; // Import the Menu ic
 import { Button } from "@/components/ui/button";
 import TopHeader from "./TopHeader";
 import { usePathname } from "next/navigation";
-import { useAuthStore } from "@/hooks/useAuthStore";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false); // State to toggle dropdown menu
   const pathname = usePathname();
   const isAuthPage = ["/signin", "/signup", "/verify"].includes(pathname);
-  const { isAuthenticated } = useAuthStore();
+  // const { isAuthenticated } = useAuthStore();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
