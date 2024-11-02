@@ -10,6 +10,9 @@ import {
 } from "@/components/ui/input-otp";
 import { useToast } from "@/hooks/use-toast";
 import { trpc } from "@/utils/trpc";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
+import Header from "@/components/Header";
 
 const VerifyPage = () => {
   const router = useRouter();
@@ -18,6 +21,9 @@ const VerifyPage = () => {
   const [email, setEmail] = useState("");
   const [timeLeft, setTimeLeft] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("verificationEmail");
@@ -34,6 +40,12 @@ const VerifyPage = () => {
       return () => clearTimeout(timer);
     }
   }, [timeLeft]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/interests");
+    }
+  }, [isAuthenticated, router]);
 
   const verifyOTP = trpc.user.verifyOTP.useMutation({
     onSuccess: () => {
@@ -97,55 +109,58 @@ const VerifyPage = () => {
   // }
 
   return (
-    <div className="container max-w-xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-md p-8 border-2">
-        <h1 className="text-2xl font-bold text-center mb-2">
-          Verify your email
-        </h1>
-        <div className="flex justify-center mb-8">
-          <p className="text-center text-gray-600 w-80">
-            Enter the 8 digit code you have received on {maskedEmail}
-          </p>
-        </div>
+    <div>
+      <Header />
+      <div className="container max-w-xl mx-auto p-6">
+        <div className="bg-white rounded-lg shadow-md p-8 border-2">
+          <h1 className="text-2xl font-bold text-center mb-2">
+            Verify your email
+          </h1>
+          <div className="flex justify-center mb-8">
+            <p className="text-center text-gray-600 w-80">
+              Enter the 8 digit code you have received on {maskedEmail}
+            </p>
+          </div>
 
-        <div className="flex flex-col sm:items-start items-center sm:mx-6 mb-10">
-          <p className="text-sm font-semibold mb-2">Code</p>
-          <InputOTP
-            value={code}
-            onChange={(value) => setCode(value)}
-            maxLength={8}
-            render={({ slots }) => (
-              <InputOTPGroup className="">
-                {slots.map((slot, index) => (
-                  <React.Fragment key={index}>
-                    <InputOTPSlot {...slot} />
-                    {index < slots.length - 1 && <div className="sm:w-3" />}
-                  </React.Fragment>
-                ))}
-              </InputOTPGroup>
-            )}
-          />
-        </div>
+          <div className="flex flex-col sm:items-start items-center sm:mx-6 mb-10">
+            <p className="text-sm font-semibold mb-2">Code</p>
+            <InputOTP
+              value={code}
+              onChange={(value) => setCode(value)}
+              maxLength={8}
+              render={({ slots }) => (
+                <InputOTPGroup className="">
+                  {slots.map((slot, index) => (
+                    <React.Fragment key={index}>
+                      <InputOTPSlot {...slot} />
+                      {index < slots.length - 1 && <div className="sm:w-3" />}
+                    </React.Fragment>
+                  ))}
+                </InputOTPGroup>
+              )}
+            />
+          </div>
 
-        <Button
-          className="w-[calc(100%-50px)] flex justify-center items-center uppercase mx-auto"
-          onClick={handleVerify}
-          disabled={code.length !== 8 || isSubmitting}
-        >
-          {isSubmitting ? "Verifying..." : "Verify"}
-        </Button>
-
-        <div className="text-center">
           <Button
-            variant="link"
-            onClick={handleResendCode}
-            disabled={timeLeft > 0}
-            className="text-sm"
+            className="w-[calc(100%-50px)] flex justify-center items-center uppercase mx-auto"
+            onClick={handleVerify}
+            disabled={code.length !== 8 || isSubmitting}
           >
-            {timeLeft > 0
-              ? `Resend code in ${timeLeft}s`
-              : "Didn't receive the code? Resend"}
+            {isSubmitting ? "Verifying..." : "Verify"}
           </Button>
+
+          <div className="text-center">
+            <Button
+              variant="link"
+              onClick={handleResendCode}
+              disabled={timeLeft > 0}
+              className="text-sm"
+            >
+              {timeLeft > 0
+                ? `Resend code in ${timeLeft}s`
+                : "Didn't receive the code? Resend"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

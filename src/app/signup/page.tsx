@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { trpc } from "@/utils/trpc";
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "@/store/features/authSlices";
+import Header from "@/components/Header";
 
 interface UserData {
   interests: string[];
@@ -17,6 +20,7 @@ interface UserData {
 export default function SignUp() {
   const router = useRouter();
   const { toast } = useToast();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,11 +30,16 @@ export default function SignUp() {
 
   const signup = trpc.user.signup.useMutation({
     onSuccess: (data) => {
-      // Store user ID and email in localStorage
-      if (data && data?.userData?.userId) {
-        localStorage.setItem("userInfo", JSON.stringify(data.userData));
+      if (data?.userData?.userId) {
+        const userData = {
+          userId: data.userData.userId,
+          username: data.userData.username,
+          interests: [],
+        };
+        dispatch(setAuthUser(userData));
+        localStorage.setItem("userInfo", JSON.stringify(userData));
+        localStorage.setItem("verificationEmail", formData.email);
       }
-      localStorage.setItem("verificationEmail", formData.email);
 
       toast({
         title: "Account created",
@@ -45,9 +54,6 @@ export default function SignUp() {
         title: "Error",
         description: error.message,
       });
-    },
-    onSettled: () => {
-      setIsSubmitting(false);
     },
   });
 
@@ -104,94 +110,97 @@ export default function SignUp() {
   }, [router]);
 
   return (
-    <div className="container max-w-lg mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-md p-8 border-2">
-        <h1 className="text-2xl font-bold text-center mb-6">
-          Create your account
-        </h1>
+    <div>
+      <Header />
+      <div className="container max-w-lg mx-auto p-6">
+        <div className="bg-white rounded-lg shadow-md p-8 border-2">
+          <h1 className="text-2xl font-bold text-center mb-6">
+            Create your account
+          </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Name
-            </label>
-            <Input
-              id="name"
-              type="text"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value.trim() })
-              }
-              placeholder="Enter your name"
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <Input
+                id="name"
+                type="text"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value.trim() })
+                }
+                placeholder="Enter your name"
+                disabled={isSubmitting}
+                required
+                minLength={2}
+                maxLength={50}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value.trim() })
+                }
+                placeholder="Enter your email"
+                disabled={isSubmitting}
+                required
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                placeholder="Enter your password"
+                disabled={isSubmitting}
+                required
+                minLength={6}
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full uppercase"
               disabled={isSubmitting}
-              required
-              minLength={2}
-              maxLength={50}
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
             >
-              Email
-            </label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value.trim() })
-              }
-              placeholder="Enter your email"
-              disabled={isSubmitting}
-              required
-            />
-          </div>
+              {isSubmitting ? "Creating Account..." : "Create Account"}
+            </Button>
+          </form>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Have an Account?{" "}
+            <Link
+              href="/signin"
+              className="text-primary hover:underline font-bold"
             >
-              Password
-            </label>
-            <Input
-              id="password"
-              type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              placeholder="Enter your password"
-              disabled={isSubmitting}
-              required
-              minLength={6}
-            />
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full uppercase"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Creating Account..." : "Create Account"}
-          </Button>
-        </form>
-
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Have an Account?{" "}
-          <Link
-            href="/signin"
-            className="text-primary hover:underline font-bold"
-          >
-            LOGIN
-          </Link>
-        </p>
+              LOGIN
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
