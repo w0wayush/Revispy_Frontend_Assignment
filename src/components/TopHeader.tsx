@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/hooks/useAuthStore";
 import { ExitIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,9 +10,9 @@ const TopHeader = () => {
   const isAuthPage = ["/signin", "/signup", "/verify", "/interests"].includes(
     pathname
   );
-
   const [userName, setUserName] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const { logout } = useAuthStore();
 
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
@@ -28,6 +29,7 @@ const TopHeader = () => {
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
     setUserName(null); // Clear the username from the state
+    logout();
     window.location.href = "/";
   };
 

@@ -67,27 +67,6 @@ export const userRouter = router({
       };
     }),
 
-  /*   verifyEmail: publicProcedure
-    .input(
-      z.object({
-        code: z.string(),
-      })
-    )
-    .mutation(async ({ input }) => {
-      await connectDB();
-      const user = await User.findOneAndUpdate(
-        { verificationCode: input.code },
-        { verified: true, verificationCode: null },
-        { new: true }
-      );
-
-      if (!user) {
-        throw new Error("Invalid verification code");
-      }
-
-      return { success: true, message: "Email verified successfully" };
-    }), */
-
   login: publicProcedure
     .input(
       z.object({
