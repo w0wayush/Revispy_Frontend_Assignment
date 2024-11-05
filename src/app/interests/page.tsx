@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { trpc } from "@/utils/trpc";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "@/store/features/authSlices";
 import Header from "@/components/Header";
+import { RootState } from "@/store";
 
 const interests = [
   { id: "books", label: "Books" },
@@ -33,7 +34,7 @@ export default function InterestsPage() {
   const router = useRouter();
   const { toast } = useToast();
   const dispatch = useDispatch();
-  // const user = useSelector((state: RootState) => state.auth.user);
+  const user = useSelector((state: RootState) => state.auth.user);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
   const handleInterestChange = (interest: string) => {
@@ -53,7 +54,7 @@ export default function InterestsPage() {
       };
 
       dispatch(setAuthUser(updatedUserData));
-      localStorage.setItem("userInfo", JSON.stringify(updatedUserData));
+      // localStorage.setItem("userInfo", JSON.stringify(updatedUserData));
 
       toast({
         title: "Success",
@@ -80,8 +81,9 @@ export default function InterestsPage() {
       return;
     }
 
-    const userInfo = localStorage.getItem("userInfo");
-    const userData = JSON.parse(userInfo || "");
+    // const userInfo = localStorage.getItem("userInfo");
+    // const userData = JSON.parse(userInfo || "");
+    const userData = user;
     console.log(userData);
 
     updateInterests.mutate({

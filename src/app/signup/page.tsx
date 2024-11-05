@@ -10,12 +10,13 @@ import { trpc } from "@/utils/trpc";
 import { useDispatch } from "react-redux";
 import { setAuthUser } from "@/store/features/authSlices";
 import Header from "@/components/Header";
+import { useAuthStore } from "@/hooks/useAuthStore";
 
-interface UserData {
-  interests: string[];
-  userId: string;
-  name: string;
-}
+// interface UserData {
+//   interests: string[];
+//   userId: string;
+//   name: string;
+// }
 
 export default function SignUp() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function SignUp() {
     password: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuthStore();
 
   const signup = trpc.user.signup.useMutation({
     onSuccess: (data) => {
@@ -97,17 +99,18 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    const userInfoString = localStorage.getItem("userInfo");
+    // const userInfoString = localStorage.getItem("userInfo");
 
-    if (userInfoString) {
-      const userData = JSON.parse(userInfoString) as UserData;
+    const userData = user;
+    if (userData) {
+      // const userData = JSON.parse(userInfoString) as UserData;
       if (userData.interests && userData.interests.length > 0) {
         router.push("/");
       } else {
         router.push("/interests");
       }
     }
-  }, [router]);
+  }, [router, user]);
 
   return (
     <div>
